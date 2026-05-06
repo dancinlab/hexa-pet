@@ -1,0 +1,80 @@
+# Changelog
+
+All notable changes to **hexa-pet** are documented here. Format follows
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and SemVer.
+
+## [1.0.0] - 2026-05-06
+
+### Added
+- Initial standalone extraction from
+  [`n6-architecture`](https://github.com/need-singularity/n6-architecture)
+  SHA `c0f1f570` (`domains/pets/` subtree). Sister of `hexa-bio` standalone
+  pattern (2026-05-04).
+- 5-verb consumer-pet-care substrate (HEXA family):
+  - `cat_food/` — feline obligate-carnivore food spec doc. **SPEC**
+    placeholder. Physical-limit anchors: AAFCO 26% protein / 0.1% taurine +
+    Atwater 4-9-4 + Maillard kinetics + a_w shelf-life. mk2 ceiling-breach
+    upgrade (alien-grade 13+) with Carnot extrusion floor + Landauer
+    provenance floor + Weindruch lifespan extension + Deusch microbiome
+    diversity + IPCC climate-resilient supply. F-CF-MVP-1..5 2026-07-30 ~
+    2026-09-30 + F-CF-MK2-1..5 2027-Q2 ~ 2031.
+  - `cat_litter/` — Wyoming Na-bentonite + zeolite + carbon hygiene material
+    spec doc. **SPEC** placeholder. Physical-limit anchors: bentonite swell
+    12× dry volume (Grim 1968) + 4-tier odor neutralization + 5 primary
+    minerals. n=6 projection: σ=12 swell ratio / τ=4 odor tier / φ=2 grain
+    mode / J₂=24 hour odor-suppression industry baseline. F-CL-MVP-1..4
+    2026-07-30 ~ 2026-08-30.
+  - `cat_toy/` — nepetalactone-driven prey-mimic toys spec doc. **SPEC**
+    placeholder. Physical-limit anchors: Antoine 1888 nepetalactone vapor
+    pressure + Kevlar 29 fiber + plain-weave Martindale + Bradshaw 1992 cat
+    behavioral ethogram + Lindner 1995 cat-bite 58 N + Vogel 1994 low-Re
+    flapping flight.
+  - `dog_food/` — facultative-carnivore canine food spec doc. **SPEC**
+    placeholder. Physical-limit anchors: AAFCO 18% protein / 10 EAA (no
+    taurine min) + Atwater 4-9-4 + low-GI grain agronomy (barley + sorghum +
+    lentil + chickpea) + Bifidobacterium animalis lactis Bb12 fermentation +
+    turmeric curcumin + ginger zingiberene + PE-laminated kraft pouch
+    recycling.
+  - `dog_toy/` — Kevlar-core rope + rubber chew toys spec doc. **SPEC**
+    placeholder. Physical-limit anchors: Lindner 1995 canine bite 1-4 MPa +
+    Hertz 1881 contact mechanics + Powers 1948 cement-paste hydration ↔
+    rubber crosslinking + Helmholtz 1860 acoustic resonator + Hearle 1969
+    3-strand twist efficiency + Heffner 1983 canine audiometry.
+- 5-verb CLI router (`cli/hexa-pet.hexa`) with subcmds: `cat_food`,
+  `cat_litter`, `cat_toy`, `dog_food`, `dog_toy`, `status`, `selftest`,
+  `help`, `--version`. All subcmds print the corresponding spec doc
+  headline (placeholder; working numerical impl TBD).
+- `tests/test_selftest.hexa` — 5-verb count check harness.
+- `install.hexa` hx hook (raw#9 STRICT — hexa-only orchestration; zero
+  external deps).
+- MIT license, README, hexa.toml manifest.
+- GitHub-only distribution (canonical at
+  <https://github.com/need-singularity/hexa-pet>; install via
+  `hx install hexa-pet` from hexa-lang registry, or `git clone`).
+
+### Honest scope (raw#10 C3)
+- 5 of 5 verbs ship as **spec docs only** with placeholder CLI dispatcher.
+  Working `.hexa` numerical sandboxes are TBD per per-verb F-*-MVP-*
+  deadlines (cat-litter F-CL-MVP-1 first 2026-07-30; cat-food F-CF-MVP-1..5
+  2026-07-30 ~ 09-30; dog-food + cat-toy + dog-toy mk1 pending).
+- Physical-limit anchors (AAFCO numbers, Atwater factor, Wyoming-bentonite
+  swell ratio, nepetalactone vapor pressure, Lindner canine bite mechanics)
+  are literature-anchored theoretical-analytical only — no lab measurement
+  by this repo at v1.0.0.
+- n=6 invariant lattice (`σ(6)=12, τ(6)=4, φ(6)=2, J₂(6)=24`) projections
+  per-verb are working hypotheses pending Bayesian audit per F-* gates.
+- No regulatory pathway. AAFCO / WSAVA / FAO endorsement is explicitly
+  post-MVP; nothing here is a medical, veterinary, or nutritional claim.
+- Consumer-friendly ≠ consumer-tested. This is a builder substrate, not a
+  finished product. No animal trials have been conducted.
+
+### Provenance
+- Extracted from `n6-architecture/domains/pets/` (SHA `c0f1f570`,
+  2026-05-06). Source files unchanged; directory slugs converted from
+  `kebab-case` to `snake_case` per hexa-lang raw#11.
+- Sister extractions: `hexa-bio` v1.0.0 (4-verb molecular toolkit,
+  Apache-2.0, 2026-05-04).
+- Closure verdict: **SPEC_FIRST** (5/5 verbs spec-only at v1.0.0;
+  working `.hexa` CLI TBD).
+
+[1.0.0]: https://github.com/need-singularity/hexa-pet/releases/tag/v1.0.0

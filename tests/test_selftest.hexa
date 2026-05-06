@@ -1,0 +1,32 @@
+#!hexa strict
+// tests/test_selftest.hexa — 5-verb pet substrate count harness
+//
+// Pass criterion: __HEXA_PET_SELFTEST__ PASS sentinel present in selftest
+// subcommand output, AND verbs_present == 5.
+//
+// Cost: $0 (placeholder dispatcher orchestrates spec doc presence checks).
+
+fn main() {
+    let root = env("HEXA_PET_ROOT")
+    let mut cli = "cli/hexa-pet.hexa"
+    if root.len() > 0 { cli = root + "/cli/hexa-pet.hexa" }
+
+    let cmd = "HEXA_PET_ROOT=\"" + root + "\" hexa run \"" + cli + "\" selftest 2>&1"
+    let raw = exec(cmd)
+
+    let pass_sentinel = raw.contains("__HEXA_PET_SELFTEST__ PASS")
+    let pass_count = raw.contains("verbs_present = 5 / 5")
+
+    if pass_sentinel && pass_count {
+        println("test_selftest: PASS (5/5 verbs + sentinel present)")
+        return
+    }
+
+    println("test_selftest: FAIL")
+    if pass_sentinel == false { println("  reason: __HEXA_PET_SELFTEST__ PASS sentinel missing") }
+    if pass_count == false    { println("  reason: verbs_present != 5 / 5") }
+    println("--- raw output ---")
+    println(raw.trim())
+    println("--- end raw output ---")
+    exit(1)
+}

@@ -1,0 +1,299 @@
+#!hexa strict
+// hexa-pet/cli/hexa-pet.hexa — standalone hexa-pet CLI router
+//
+// 5-verb consumer-pet-care toolkit (HEXA family) router:
+//   cat_food    — feline obligate-carnivore food (AAFCO 26% protein / taurine)
+//   cat_litter  — Wyoming bentonite + zeolite + carbon hygiene material
+//   cat_toy     — nepetalactone-driven prey-mimic toys (Kevlar / felted wool)
+//   dog_food    — facultative-carnivore food (AAFCO 18% protein, 10 EAA)
+//   dog_toy     — Kevlar-core rope + rubber chew toys (Lindner bite mechanics)
+//
+// Plus utility subcmds:
+//   status      — verb status table (5 verbs spec-only at v1.0.0)
+//   selftest    — verify 5-verb spec doc presence (count check)
+//   help        — this help
+//   --version   — print version
+//
+// Root resolution: $HEXA_PET_ROOT env, else inferred from $0 dirname.
+//
+// Constraints:
+//   raw#9   — hexa-only orchestration; zero Python / external deps
+//   raw#15  — read-only (spec docs); no audit log writes
+//   raw#10  — honest C3: spec-first, working numerical impl TBD
+//
+// Cost: $0 (Mac local; pure spec substrate + placeholder dispatcher).
+//
+// @no-lock-needed
+// @resolver-bypass(reason="Pure local CLI router; placeholder verbs print spec headlines.")
+
+let VERSION = "1.0.0"
+
+// ─── env / path resolve ───
+
+let HOME = env("HOME")
+let HEXA_PET_ROOT_ENV = env("HEXA_PET_ROOT")
+
+fn hexa_pet_root() -> str {
+    if HEXA_PET_ROOT_ENV.len() > 0 { return HEXA_PET_ROOT_ENV }
+    let inferred = exec("dirname \"$(dirname \"$0\")\" 2>/dev/null || true").trim()
+    if inferred.len() > 0 { return inferred }
+    return HOME + "/.hexa-pet"  // @allow-devpath
+}
+
+let HP = hexa_pet_root()
+let HEXA_BIN = exec("command -v hexa 2>/dev/null || echo hexa").trim()
+
+// 5-verb spec doc registry (snake_case dirs, hyphenated .md slugs)
+let SPEC_CAT_FOOD   = HP + "/cat_food/cat-food.md"
+let SPEC_CAT_LITTER = HP + "/cat_litter/cat-litter.md"
+let SPEC_CAT_TOY    = HP + "/cat_toy/cat-toy.md"
+let SPEC_DOG_FOOD   = HP + "/dog_food/dog-food.md"
+let SPEC_DOG_TOY    = HP + "/dog_toy/dog-toy.md"
+
+// ─── arg helpers ───
+
+fn shq(s: str) -> str {
+    return "'" + s.replace("'", "'\\''") + "'"
+}
+
+fn has_flag(a: [str], flag: str) -> bool {
+    for x in a {
+        if x == flag { return true }
+    }
+    return false
+}
+
+fn json_mode(a: [str]) -> bool {
+    return has_flag(a, "--json")
+}
+
+// ─── spec doc helpers ───
+
+fn _file_exists(p: str) -> bool {
+    let r = exec("[ -f " + shq(p) + " ] && echo yes || echo no").trim()
+    return r == "yes"
+}
+
+fn _print_spec_headline(verb: str, spec_path: str) {
+    if _file_exists(spec_path) == false {
+        println("ERROR: spec doc not found: " + spec_path)
+        println("  (set HEXA_PET_ROOT or run from repo root)")
+        return
+    }
+    println("hexa-pet " + verb + " — spec doc:")
+    println("  " + spec_path)
+    println("")
+    println("--- doc head (first 30 lines) ---")
+    let raw = exec("head -30 " + shq(spec_path) + " 2>&1")
+    println(raw.trim())
+    println("--- end doc head ---")
+    println("")
+    println("__HEXA_PET_" + verb.to_upper() + "__ PASS")
+}
+
+// ─── caveat printer (raw#10 honest C3) ───
+
+fn _print_caveats() {
+    println("")
+    println("--- caveats (raw#10 C3) ---")
+    println("  1. 5/5 verbs ship as SPEC docs only at v1.0.0 — working .hexa")
+    println("     numerical sandboxes are TBD per per-verb F-*-MVP-* deadlines")
+    println("     (cat-litter F-CL-MVP-1 2026-07-30; cat-food F-CF-MVP-1..5")
+    println("      2026-07-30~09-30; dog-food + cat-toy + dog-toy MK1 pending).")
+    println("  2. n=6 invariant lattice (σ=12, τ=4, φ=2, J₂=24) projected per-verb")
+    println("     in spec docs; empirical Bayesian audit pending per F-* gates.")
+    println("  3. Physical-limit anchors (AAFCO + Atwater + Maillard + Wyoming")
+    println("     bentonite swell + Antoine nepetalactone + Lindner canine bite)")
+    println("     are theoretical-analytical only; lab measurement is post-MVP.")
+    println("  4. Consumer-friendly self-contained substrate — no cross-link to")
+    println("     other hexa-* repos required.")
+    println("  5. MIT license — minimal copyleft friction for downstream pet-care")
+    println("     consumer products + maker community remix.")
+}
+
+// ─── subcommand: status ───
+
+fn cmd_status(a: [str]) {
+    if json_mode(a) {
+        let mut js = "{\"hexa_pet\":\"" + VERSION + "\",\"subcmd\":\"status\","
+        js = js + "\"verbs_total\":5,\"verbs_wired\":0,\"verbs_spec_only\":5,"
+        js = js + "\"verdict\":\"SPEC_FIRST\","
+        js = js + "\"verbs\":[\"cat_food:spec\",\"cat_litter:spec\",\"cat_toy:spec\",\"dog_food:spec\",\"dog_toy:spec\"],"
+        js = js + "\"n6_lattice\":\"per_verb_projection\""
+        js = js + "}"
+        println(js)
+        return
+    }
+
+    println("hexa-pet " + VERSION + " status — 5-verb 반려동물 toolkit (HEXA family)")
+    println("")
+    println("  verb         status            n=6 lattice                    physical-limit anchor")
+    println("  ------------ ----------------- ------------------------------ -----------------------------------")
+    println("  cat_food     SPEC v1.0.0       per-verb projection            AAFCO 26% protein / 0.1% taurine")
+    println("  cat_litter   SPEC v1.0.0       σ=12 bentonite swell           Wyoming Na-bentonite Grim 1968")
+    println("  cat_toy      SPEC v1.0.0       per-verb projection            Antoine nepetalactone vapor pressure")
+    println("  dog_food     SPEC v1.0.0       per-verb projection            AAFCO 18% protein / 10 EAA")
+    println("  dog_toy      SPEC v1.0.0       per-verb projection            Lindner 1995 canine bite 1-4 MPa")
+    println("")
+    println("  verdict: SPEC_FIRST (5/5 verbs spec-only; working .hexa CLI TBD)")
+    println("")
+    println("  to view a verb spec doc:")
+    println("    hexa-pet cat_food         (prints cat-food.md headline)")
+    println("    hexa-pet cat_litter       (prints cat-litter.md headline)")
+    println("    hexa-pet cat_toy          (prints cat-toy.md headline)")
+    println("    hexa-pet dog_food         (prints dog-food.md headline)")
+    println("    hexa-pet dog_toy          (prints dog-toy.md headline)")
+    println("    hexa-pet selftest         (5-verb count check)")
+    _print_caveats()
+}
+
+// ─── subcommand: cat_food ───
+
+fn cmd_cat_food(a: [str]) {
+    _print_spec_headline("cat_food", SPEC_CAT_FOOD)
+    if json_mode(a) {
+        println("{\"hexa_pet\":\"" + VERSION + "\",\"subcmd\":\"cat_food\",\"status\":\"spec\"}")
+    }
+}
+
+// ─── subcommand: cat_litter ───
+
+fn cmd_cat_litter(a: [str]) {
+    _print_spec_headline("cat_litter", SPEC_CAT_LITTER)
+    if json_mode(a) {
+        println("{\"hexa_pet\":\"" + VERSION + "\",\"subcmd\":\"cat_litter\",\"status\":\"spec\"}")
+    }
+}
+
+// ─── subcommand: cat_toy ───
+
+fn cmd_cat_toy(a: [str]) {
+    _print_spec_headline("cat_toy", SPEC_CAT_TOY)
+    if json_mode(a) {
+        println("{\"hexa_pet\":\"" + VERSION + "\",\"subcmd\":\"cat_toy\",\"status\":\"spec\"}")
+    }
+}
+
+// ─── subcommand: dog_food ───
+
+fn cmd_dog_food(a: [str]) {
+    _print_spec_headline("dog_food", SPEC_DOG_FOOD)
+    if json_mode(a) {
+        println("{\"hexa_pet\":\"" + VERSION + "\",\"subcmd\":\"dog_food\",\"status\":\"spec\"}")
+    }
+}
+
+// ─── subcommand: dog_toy ───
+
+fn cmd_dog_toy(a: [str]) {
+    _print_spec_headline("dog_toy", SPEC_DOG_TOY)
+    if json_mode(a) {
+        println("{\"hexa_pet\":\"" + VERSION + "\",\"subcmd\":\"dog_toy\",\"status\":\"spec\"}")
+    }
+}
+
+// ─── subcommand: selftest ───
+
+fn cmd_selftest(a: [str]) {
+    println("hexa-pet selftest — 5-verb spec doc presence check")
+    println("")
+    let mut count = 0
+    let pairs = [
+        ["cat_food",   SPEC_CAT_FOOD],
+        ["cat_litter", SPEC_CAT_LITTER],
+        ["cat_toy",    SPEC_CAT_TOY],
+        ["dog_food",   SPEC_DOG_FOOD],
+        ["dog_toy",    SPEC_DOG_TOY],
+    ]
+    for pair in pairs {
+        let verb = pair[0]
+        let path = pair[1]
+        if _file_exists(path) {
+            println("  [PASS] " + verb + " (spec present: " + path + ")")
+            count = count + 1
+        } else {
+            println("  [FAIL] " + verb + " (spec missing: " + path + ")")
+        }
+    }
+    println("")
+    println("verbs_present = " + str(count) + " / 5")
+    let pass_overall = count == 5
+    if pass_overall {
+        println("__HEXA_PET_SELFTEST__ PASS")
+    } else {
+        println("__HEXA_PET_SELFTEST__ FAIL")
+    }
+    if json_mode(a) {
+        let v = if pass_overall { "PASS" } else { "FAIL" }
+        println("{\"hexa_pet\":\"" + VERSION + "\",\"subcmd\":\"selftest\",\"verdict\":\"" + v + "\",\"verbs_present\":" + str(count) + ",\"verbs_total\":5}")
+    }
+    _print_caveats()
+    if pass_overall == false { exit(1) }
+}
+
+// ─── version ───
+
+fn cmd_version() {
+    println("hexa-pet " + VERSION)
+    println("standalone 반려동물 toolkit (HEXA family — extracted from n6-architecture@c0f1f570 on 2026-05-06)")
+    println("license: MIT")
+    println("repo:    https://github.com/need-singularity/hexa-pet")
+}
+
+// ─── help ───
+
+fn cmd_help() {
+    println("hexa-pet " + VERSION + " — standalone 반려동물 toolkit CLI")
+    println("")
+    println("usage: hexa-pet <subcmd> [flags...]")
+    println("")
+    println("verb subcommands (5-verb pet substrate — n=6 invariant lattice):")
+    println("  cat_food        feline obligate-carnivore food spec       [SPEC]")
+    println("  cat_litter      Wyoming bentonite hygiene material spec   [SPEC]")
+    println("  cat_toy         nepetalactone prey-mimic toy spec         [SPEC]")
+    println("  dog_food        facultative-carnivore canine food spec    [SPEC]")
+    println("  dog_toy         Kevlar/rubber canine chew toy spec        [SPEC]")
+    println("")
+    println("utility subcommands:")
+    println("  status          5-verb status table + verdict + caveats")
+    println("  selftest        5-verb spec doc presence count check")
+    println("")
+    println("global flags:")
+    println("  --version       show version")
+    println("  --json          machine-parseable JSON tail")
+    println("  --help, -h      this help")
+    println("")
+    println("env:")
+    println("  HEXA_PET_ROOT          override repo root (default: inferred from $0)")
+    println("")
+    println("examples:")
+    println("  hexa-pet status                  # 5-verb table")
+    println("  hexa-pet cat_food                # cat-food.md spec headline")
+    println("  hexa-pet selftest --json         # JSON-tail count check")
+}
+
+// ─── main dispatcher ───
+
+fn main(args: [str]) {
+    if args.len() < 2 {
+        cmd_help()
+        return
+    }
+    let sub = args[1]
+
+    if sub == "--version" || sub == "-v" { cmd_version(); return }
+    if sub == "--help"    || sub == "-h" { cmd_help();    return }
+
+    if sub == "status"      { cmd_status(args);      return }
+    if sub == "cat_food"    { cmd_cat_food(args);    return }
+    if sub == "cat_litter"  { cmd_cat_litter(args);  return }
+    if sub == "cat_toy"     { cmd_cat_toy(args);     return }
+    if sub == "dog_food"    { cmd_dog_food(args);    return }
+    if sub == "dog_toy"     { cmd_dog_toy(args);     return }
+    if sub == "selftest"    { cmd_selftest(args);    return }
+    if sub == "help"        { cmd_help();            return }
+
+    println("hexa-pet: unknown subcommand: " + sub)
+    println("(try `hexa-pet help`)")
+    exit(2)
+}
