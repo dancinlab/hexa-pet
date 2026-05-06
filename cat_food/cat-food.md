@@ -1,3 +1,6 @@
+<!-- @canonical: n6-architecture@0570a835:domains/pets/cat-food/cat-food.md -->
+<!-- @extracted: 2026-05-06 -->
+<!-- @md5_at_extraction: 5d4d773dc169c9fc20315b8ce2d20be6 -->
 <!-- gold-standard: shared/harness/sample.md -->
 <!-- @doc(type=paper) -->
 ---

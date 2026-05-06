@@ -1,3 +1,6 @@
+<!-- @canonical: n6-architecture@0570a835:domains/pets/cat-litter/cat-litter.md -->
+<!-- @extracted: 2026-05-06 -->
+<!-- @md5_at_extraction: fa5c3f728060766a68d46d18262a74fd -->
 <!-- gold-standard: shared/harness/sample.md -->
 <!-- @doc(type=paper) -->
 ---

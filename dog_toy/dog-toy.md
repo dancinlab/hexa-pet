@@ -1,3 +1,6 @@
+<!-- @canonical: n6-architecture@0570a835:domains/pets/dog-toy/dog-toy.md -->
+<!-- @extracted: 2026-05-06 -->
+<!-- @md5_at_extraction: c1343aecc6ff6910d6115263d4a4f6fb -->
 <!-- gold-standard: shared/harness/sample.md -->
 <!-- @doc(type=paper) -->
 ---
