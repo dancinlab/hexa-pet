@@ -1,4 +1,4 @@
-# hexa-pet 🐱 — 반려동물 toolkit
+# 🐱 hexa-pet — 반려동물 toolkit
 
 > 5-verb consumer-pet-care substrate organized around the **n=6 invariant
 > lattice**: cat-food / cat-litter / cat-toy / dog-food / dog-toy.
