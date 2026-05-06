@@ -1,0 +1,57 @@
+# .roadmap.hexa_pet — repo-overall tracker
+
+> Cross-cutting state: invariant lattice, release cadence, cycle history,
+> deadlines, pointers. Self-contained sister under `need-singularity` org.
+
+**Last sync**: 2026-05-06 · **Current release**: v1.0.0 · **Branch**: `main`
+
+---
+
+## §0 Terminal goal — consumer-grade 5-verb 반려동물 toolkit
+
+hexa-pet 도착지 = **5-verb 반려동물 toolkit 모두 commercial-ready product spec 도달 (cat·dog 모두) + 각 verb biocompatibility / efficacy data + n=6 nutrition lattice 검증**.
+
+DoD:
+1. 각 verb (cat-food / cat-litter / cat-toy / dog-food / dog-toy) commercial-ready 1-page product spec.
+2. nutrition n=6 macronutrient ratio σ:τ:φ = 12:4:2 fed-state 영양 흡수 측정 fit.
+3. dog-toy n=6 rest-time interval τ=4 cycles 사용 데이터 추적.
+
+## §A.1 Invariant lattice (n=6)
+
+```
+σ(6) · φ(6) = n · τ(6) = J₂ = 24
+   12   ·   2  =  6  ·   4  = 24
+```
+
+| Symbol | Value | Role | Pet projection |
+|--------|-------|------|----------------|
+| σ(6)   | 12    | sigma — cardinality bin | 12 nutrient classes / 12 toy interaction modes |
+| τ(6)   | 4     | tau — state quartet | 4 daily behavior phases (eat · play · rest · groom) |
+| φ(6)   | 2     | phi — verdict bit | cat / dog binary species axis |
+| J₂     | 24    | Mathieu / Leech | 24-hour cycle integral (food + activity) |
+
+## §A.2 Release cadence
+
+| Version | Date | Status | Highlights |
+|---------|------|--------|------------|
+| v1.0.0 | 2026-05-06 | RELEASED | 5 verb 시드 (cat·dog × food/litter/toy) |
+| v1.1.0 | ~2026-07 (TARGET) | planned | cat-food product 1-page spec |
+| v1.2.0 | ~2026-09 | planned | cat 3-verb product line spec (food + litter + toy) |
+| v1.3.0 | ~2026-11 | planned | dog 2-verb product line spec |
+| v2.0.0 | ~2027-Q1 | ASPIRATIONAL | nutrition n=6 lattice cross-verify (single-pet calorimetry / MRI response) |
+
+## §A.3 Cycle history
+
+- **Cycle 0 (2026-05-06)** — v1.0.0 initial extraction from n6-architecture@c0f1f570. Commit `cc358d1`. 5 verb cp -R.
+
+## §A.4 Falsifier preregister
+
+- **F-PET-1** — cat-food n=6 macronutrient ratio σ:τ:φ = 12:4:2 fed-state 영양 흡수 측정 일치?
+- **F-PET-2** — dog-toy n=6 rest-time interval τ=4 cycles 사용 데이터 (wearable activity tracker)?
+- **F-PET-3** — cat-litter 6-cycle clumping rate vs commercial baseline 비교?
+
+## §A.5 Pending decisions
+
+- consumer-product spec → 실제 수요 반영 (vs spec-pure) 균형.
+- bird/fish/reptile 추가 axis 확장 시점.
+- cat-food / dog-food 실제 공급망 partner 확보 시점.
