@@ -3,11 +3,55 @@
 All notable changes to **hexa-pet** are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and SemVer.
 
+## [Unreleased] - 2026-05-08
+
+### Added — `firmware/mcu/feeder_host.hexa` first stdlib/hal consumer (cross-repo)
+
+- `firmware/mcu/feeder_host.hexa` (~245 lines) — **first stdlib/hal
+  consumer in hexa-pet** + **2nd external sister-project consumer of
+  stdlib/hal v1.11.0** (after hexa-cern @ 6e102e5).
+
+  Smart pet-feeder host MCU controller for the cat·dog food verb domain.
+  Target: ESP32-C3-WROOM-02 (RV32IMC RISC-V, 160 MHz, WiFi+BLE; popular
+  consumer-product MCU choice). stdlib/hal/backend/esp32c3 backend.
+
+  Pattern: hexa-cern/firmware/mcu/trigger_host.hexa (sister-consumer
+  pattern) — same handle-pool / lifecycle / falsifier re-check shape,
+  but simpler peripheral mix (no DAC, no high-speed trigger).
+
+  σ-slots consumed: **9/12 = 75%** on esp32c3 backend
+  (core/gpio/i2c/adc/pwm/timer/intr/uart/rtc) — broader coverage than
+  hexa-cern's 8/12 (no rtc, has dac instead) thanks to the pet-feeder's
+  RTC-driven daily schedule.
+
+  Reference design specs (typical home pet feeder):
+    hopper      : 2300 g (~5 lb / 2.3 kg dry food)
+    portions    : 4/day at 7:00 / 12:00 / 18:00 / 22:00
+    portion size: 50 g ± 5 g (HX711 load-cell error budget)
+    daily food  : 200 g
+    auger motor : 25 kHz PWM, duty [10%, 80%] bp, calib 10 g/s
+    HX711 ADC   : gain 128, 80 SPS, 24-bit signed
+    IR detect   : ADC threshold 500 / 12-bit, debounce 100 ms
+
+  Surface: feeder_host_{configure, read_weight_g, dispense_portion,
+  pet_detected, set_lid, current_hour, is_feeding_time, meta,
+  invariant_*}.
+
+  PASS sentinel: `__HEXA_PET_FEEDER_HOST__ PASS`.
+  Falsifier ledger F-PET-1..4 (cross-repo drift / σ-overflow /
+  hopper-overdispense / schedule-degenerate).
+
+  Architectural compliance: stdlib/hal paper-tier import ledger only —
+  actual `use stdlib/hal/...` resolves once `hx install hexa-lang`
+  lands. canon §7.5 + roadmap §F.6 / §G.5: FFI is downstream.
+
+  Brace 38/38. New dir `firmware/mcu/`.
+
 ## [1.0.0] - 2026-05-06
 
 ### Added
 - Initial standalone extraction from
-  [`n6-architecture`](https://github.com/need-singularity/n6-architecture)
+  [`n6-architecture`](https://github.com/dancinlab/n6-architecture)
   SHA `c0f1f570` (`domains/pets/` subtree). Sister of `hexa-bio` standalone
   pattern (2026-05-04).
 - 5-verb consumer-pet-care substrate (HEXA family):
@@ -49,7 +93,7 @@ All notable changes to **hexa-pet** are documented here. Format follows
   external deps).
 - MIT license, README, hexa.toml manifest.
 - GitHub-only distribution (canonical at
-  <https://github.com/need-singularity/hexa-pet>; install via
+  <https://github.com/dancinlab/hexa-pet>; install via
   `hx install hexa-pet` from hexa-lang registry, or `git clone`).
 
 ### Honest scope (raw#10 C3)
@@ -77,4 +121,4 @@ All notable changes to **hexa-pet** are documented here. Format follows
 - Closure verdict: **SPEC_FIRST** (5/5 verbs spec-only at v1.0.0;
   working `.hexa` CLI TBD).
 
-[1.0.0]: https://github.com/need-singularity/hexa-pet/releases/tag/v1.0.0
+[1.0.0]: https://github.com/dancinlab/hexa-pet/releases/tag/v1.0.0

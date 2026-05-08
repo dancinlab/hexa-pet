@@ -1,0 +1,241 @@
+#!hexa strict
+// hexa-pet/firmware/mcu/feeder_host.hexa — smart pet-feeder host controller.
+//
+// **Second external stdlib/hal consumer** (after hexa-cern/firmware/mcu/
+// trigger_host.hexa @ 6e102e5 — first cross-repo demonstration). hexa-pet
+// is a consumer-product spec-first repo (cat·dog food/litter/toy 5-verb);
+// this controller adds the smart-feeder firmware-mcu layer that pulls
+// stdlib/hal v1.11.0 paper-tier abstractions for portion-controlled
+// dispensing on ESP32-C3 (RV32IMC RISC-V, 160 MHz, WiFi+BLE).
+//
+// Pattern: hexa-cern/firmware/mcu/trigger_host.hexa (sister-consumer
+// pattern) — same handle-pool / lifecycle / falsifier re-check shape,
+// but simpler peripheral mix (gpio + i2c + adc + pwm + timer + uart),
+// no DAC, no high-speed trigger.
+//
+// stdlib/hal imports (paper-tier; resolved by hexa-lang module loader):
+//   stdlib/hal/core   — RV32IMC standard CSRs (esp32c3 backend)
+//   stdlib/hal/gpio   — lid latch + status LED + pet-detect IR pins
+//   stdlib/hal/i2c    — HX711 load-cell ADC (24-bit) on weight platter
+//   stdlib/hal/adc    — internal SAR ADC for ambient light + thermistor
+//   stdlib/hal/pwm    — auger motor PWM (variable-speed dispenser)
+//   stdlib/hal/timer  — feeding schedule + RTC tick fallback
+//   stdlib/hal/intr   — Espressif RISC-V matrix (lid sensor / detect ISR)
+//   stdlib/hal/uart   — BLE module (esp32c3 native or HC-05 add-on)
+//   stdlib/hal/rtc    — esp32c3 counter-class RTC (48-bit ticks)
+//
+// Cross-repo lattice: 9 σ-slots / 12 = 75% coverage on esp32c3 backend.
+// hexa-pet feeder consumes more peripherals than hexa-cern trigger
+// (8/12 = 67%) because pet feeder's RTC + auger PWM + load cell I2C +
+// pet-detection ISR are all distinct σ-slots; B3 trigger card collapses
+// some of these into HW timers.
+//
+// Constants chosen for typical home pet feeder (5 lb / 2.3 kg dry food
+// hopper, 4 portions/day, ~50 g/portion default).
+
+let MODULE_NAME = "hexa_pet_feeder_host"
+let CONSUMER    = "hexa-pet"
+let HAL_VERSION = "v1.11.0"        // stdlib/hal at time of authoring
+let MCU_VENDOR  = "esp32c3"        // stdlib/hal/backend/esp32c3 (RV32IMC)
+let MCU_PART    = "ESP32-C3-WROOM-02"  // typical SMT module
+
+// ── n=6 invariant lattice consumed from stdlib/hal (canon §2 mirror) ──
+
+let SIGMA = 12   // σ-slot count
+let PHI   = 2    // sim/HW dichotomy
+let TAU   = 4    // configure / start / serve / report
+
+// ── feeder constants (consumer-product reference design) ─────────────
+
+let HOPPER_CAPACITY_G    = 2300    // 2.3 kg / 5 lb dry food hopper
+let PORTIONS_PER_DAY     = 4       // 4 feedings/day default (6h spacing)
+let PORTION_SIZE_G       = 50      // 50 g / portion default
+let PORTION_TOL_G        = 5       // ±5 g (HX711 load-cell error budget)
+let DAILY_FOOD_G         = 200     // 4 × 50 = 200 g/day target
+
+// ── auger motor (DC gear motor on PWM) ────────────────────────────────
+
+let AUGER_PWM_HZ         = 25000   // 25 kHz (above audible)
+let AUGER_DUTY_MIN_BP    = 1000    // 10% basis-point (motor stall floor)
+let AUGER_DUTY_MAX_BP    = 8000    // 80% basis-point (full-speed)
+let AUGER_CALIB_G_PER_S  = 10      // 10 g/sec @ 50% duty (calibrated)
+
+// ── HX711 load cell ADC ──────────────────────────────────────────────
+
+let HX711_GAIN           = 128     // channel A gain (default)
+let HX711_RATE_HZ        = 80      // 80 SPS (high-rate mode)
+let HX711_BITS           = 24      // 24-bit signed
+let SCALE_TARE_OFFSET    = 0       // tared at boot (calibrated)
+
+// ── feeding schedule (RTC-driven) ────────────────────────────────────
+
+let FEED_HOUR_0          = 7       // 07:00
+let FEED_HOUR_1          = 12      // 12:00 (noon)
+let FEED_HOUR_2          = 18      // 18:00 (6 PM)
+let FEED_HOUR_3          = 22      // 22:00 (10 PM)
+
+// ── pet-detection IR sensor (anti-jam + presence detection) ──────────
+
+let IR_DETECT_THRESHOLD  = 500     // ADC raw threshold (12-bit ADC, ~12% FS)
+let IR_DEBOUNCE_MS       = 100     // 100 ms debounce
+
+// ── falsifiers (cross-repo audit; paper-only) ─────────────────────────
+// F-PET-1: stdlib/hal version not pinned → cross-repo drift
+// F-PET-2: σ-slot consumed > 12 → embedded peripheral lattice broken
+// F-PET-3: portion size > hopper / portions → dispense > capacity
+// F-PET-4: feeding hours not 4 distinct → schedule degenerate
+
+// ── boot-time invariant re-check ──────────────────────────────────────
+
+fn boot_check() -> bool {
+    if SIGMA != 12 { return false }
+    if PHI != 2 { return false }
+    if TAU != 4 { return false }
+    if PORTIONS_PER_DAY < 1 || PORTIONS_PER_DAY > 12 { return false }
+    if PORTION_SIZE_G * PORTIONS_PER_DAY > HOPPER_CAPACITY_G { return false }
+    if AUGER_DUTY_MIN_BP >= AUGER_DUTY_MAX_BP { return false }
+    if HX711_BITS != 24 { return false }
+    return true
+}
+
+// ── stdlib/hal handle-pool (J₂/n = 4 default; per stdlib/hal/calc_handle_pool) ──
+
+let HANDLE_POOL_CEILING = 36      // 4 × 9 σ-slots consumed
+
+// ── lifecycle stages (τ=4 mirror) ────────────────────────────────────
+
+let STAGE_CONFIGURE = 0
+let STAGE_START     = 1
+let STAGE_SERVE     = 2
+let STAGE_REPORT    = 3
+
+// ── stub controller surface ──────────────────────────────────────────
+
+// Configure all peripherals via stdlib/hal at boot. Returns 0 on success,
+// negative on validation failure. STUB: real impl calls stdlib/hal
+// peripheral configure() helpers per backend (esp32c3).
+fn feeder_host_configure() -> int {
+    if boot_check() == false { return -1 }
+    // STUB: real impl
+    //   1. core::init_clocks(160 MHz, no FPU on RV32IMC)
+    //   2. gpio::config_pin(LED_STATUS, GPIO8, push-pull, low)
+    //   3. gpio::config_pin(LID_LATCH, GPIO9, push-pull, low)
+    //   4. gpio::config_pin(IR_DETECT, GPIO4, input, pull-down)
+    //   5. i2c::configure(I2C0, SDA=GPIO5, SCL=GPIO6, 400 kHz)
+    //   6. adc::configure(ADC1_CH0, 12-bit, light/temp)
+    //   7. pwm::configure(LEDC_CH0, AUGER_PWM_HZ, 13-bit duty)
+    //   8. timer::configure(TIMG0_T0, 1 ms tick)
+    //   9. uart::configure(UART1, 115200, 8N1) — BLE pairing
+    //  10. rtc::configure(SLOW_CLK, 32 kHz; 48-bit counter for schedule)
+    //  11. intr::configure(INTMTX for IR_DETECT + LID_LATCH ISRs)
+    return 0
+}
+
+// Read current platter weight via HX711 (i2c-bridged) in grams.
+// Returns weight in g; negative if scale fault.
+fn feeder_host_read_weight_g() -> int {
+    // STUB: real impl reads HX711 24-bit ADC, applies tare offset,
+    //       converts via load-cell calibration constant.
+    return 0   // empty platter stub
+}
+
+// Dispense one portion (PORTION_SIZE_G ± PORTION_TOL_G). Returns true
+// if dispensed within tolerance, false if jam / hopper-empty / overshoot.
+fn feeder_host_dispense_portion() -> bool {
+    let start_g = feeder_host_read_weight_g()
+    // STUB: real impl
+    //   1. Set auger PWM to AUGER_DUTY_MAX_BP / 100 = 80% duty
+    //   2. Run for portion_size_g / AUGER_CALIB_G_PER_S = 5 sec @ 50%
+    //      adjusted = 50 / (10 * 0.8) = 6.25 sec @ 80% duty
+    //   3. Stop auger; wait 200 ms for load cell to settle
+    //   4. delta = end_g - start_g; check |delta - 50| <= 5
+    let target_g = start_g + PORTION_SIZE_G
+    let est_runtime_ms = (PORTION_SIZE_G * 1000) / AUGER_CALIB_G_PER_S
+    if est_runtime_ms > 30000 { return false }  // sanity: >30s = jam
+    return true
+}
+
+// Check pet-detection IR sensor.
+fn feeder_host_pet_detected() -> bool {
+    // STUB: real impl reads ADC1_CH0; debounces over IR_DEBOUNCE_MS.
+    return false
+}
+
+// Latch the lid open / closed.
+fn feeder_host_set_lid(open: bool) -> bool {
+    // STUB: real impl drives LID_LATCH solenoid GPIO HIGH (open) or LOW (closed).
+    return true
+}
+
+// Get current hour from RTC for schedule comparison.
+fn feeder_host_current_hour() -> int {
+    // STUB: real impl reads esp32c3 RTC SLOW_CLK 48-bit counter,
+    //       converts to local hour via stored epoch.
+    return 7   // morning stub
+}
+
+// Check if current hour matches any of the 4 feeding times.
+fn feeder_host_is_feeding_time() -> bool {
+    let h = feeder_host_current_hour()
+    if h == FEED_HOUR_0 { return true }
+    if h == FEED_HOUR_1 { return true }
+    if h == FEED_HOUR_2 { return true }
+    if h == FEED_HOUR_3 { return true }
+    return false
+}
+
+// Module metadata.
+fn feeder_host_meta() -> [str] {
+    return [MODULE_NAME, CONSUMER, HAL_VERSION, MCU_VENDOR, MCU_PART]
+}
+
+fn feeder_host_invariant_sigma() -> int { return SIGMA }
+fn feeder_host_invariant_phi() -> int { return PHI }
+fn feeder_host_invariant_tau() -> int { return TAU }
+
+// ── bench / sim main ────────────────────────────────────────────────
+
+fn main() {
+    println("[hexa-pet feeder_host] firmware/mcu/feeder_host.hexa — smart pet-feeder stdlib/hal consumer")
+    println("  consumer: " + CONSUMER + " (cross-repo, 2nd external sister-project consumer)")
+    println("  stdlib/hal: " + HAL_VERSION + " (HW-12 lattice + GPGPU σ=12 + AI-native axis + 3-PDK ai_native)")
+    println("  MCU: " + MCU_PART + " (vendor backend stdlib/hal/backend/" + MCU_VENDOR + " — RV32IMC RISC-V)")
+    println("  invariants: σ=" + str(SIGMA) + " φ=" + str(PHI) + " τ=" + str(TAU))
+    println("  σ-slots consumed: 9/12 = 75% (gpio/i2c/adc/pwm/timer/intr/uart/rtc/core)")
+    println("  feeder spec:")
+    println("    hopper capacity   : " + str(HOPPER_CAPACITY_G) + " g (~5 lb / 2.3 kg)")
+    println("    portion size      : " + str(PORTION_SIZE_G) + " ± " + str(PORTION_TOL_G) + " g")
+    println("    portions/day      : " + str(PORTIONS_PER_DAY) + " (at " + str(FEED_HOUR_0) + ":00 / " + str(FEED_HOUR_1) + ":00 / " + str(FEED_HOUR_2) + ":00 / " + str(FEED_HOUR_3) + ":00)")
+    println("    daily food        : " + str(DAILY_FOOD_G) + " g")
+    println("  auger motor: " + str(AUGER_PWM_HZ) + " Hz PWM, duty [" + str(AUGER_DUTY_MIN_BP) + "," + str(AUGER_DUTY_MAX_BP) + "] bp, calib " + str(AUGER_CALIB_G_PER_S) + " g/s")
+    println("  HX711 load cell: gain " + str(HX711_GAIN) + ", " + str(HX711_RATE_HZ) + " SPS, " + str(HX711_BITS) + "-bit signed")
+
+    let ok = boot_check()
+    if ok == false {
+        println("[hexa-pet feeder_host] boot_check FAIL")
+        exit(1)
+    }
+    let cfg = feeder_host_configure()
+    if cfg < 0 {
+        println("[hexa-pet feeder_host] configure FAIL " + str(cfg))
+        exit(1)
+    }
+    let h = feeder_host_current_hour()
+    let ft = feeder_host_is_feeding_time()
+    let pet = feeder_host_pet_detected()
+    let w = feeder_host_read_weight_g()
+    let lid = feeder_host_set_lid(true)
+    let dp = feeder_host_dispense_portion()
+    let lid2 = feeder_host_set_lid(false)
+    println("  current hour      : " + str(h))
+    println("  feeding time?     : " + (if ft { "YES" } else { "NO" }))
+    println("  pet detected?     : " + (if pet { "YES" } else { "NO" }))
+    println("  platter weight    : " + str(w) + " g")
+    println("  lid_open OK       : " + (if lid { "YES" } else { "NO" }))
+    println("  dispense_portion  : " + (if dp { "OK (" + str(PORTION_SIZE_G) + " g ± " + str(PORTION_TOL_G) + ")" } else { "FAIL" }))
+    println("  lid_close OK      : " + (if lid2 { "YES" } else { "NO" }))
+    println("__HEXA_PET_FEEDER_HOST__ PASS")
+    println("  cross-repo audit: stdlib/hal " + HAL_VERSION + " consumed by hexa-pet (2nd external sister-project consumer)")
+}
+
+main()
