@@ -21,7 +21,7 @@ and small-scale material science.
 This is the most self-contained pack in the family on purpose: every verb is
 a single peer-citable spec doc with physical-limit anchors and a falsifier
 preregister, copy-pasted out of the upstream
-[`n6-architecture/domains/pets/`](https://github.com/need-singularity/n6-architecture)
+[`canon/domains/pets/`](https://github.com/need-singularity/canon)
 tree (SHA `c0f1f570`, 2026-05-06). No other `hexa-*` repo is needed to use
 this one — clone it, read it, hack it.
 
@@ -71,7 +71,7 @@ preview.
 What ships at v1.0.0:
 
 - 5 peer-citable spec docs (one `.md` per verb), extracted unchanged from
-  `n6-architecture@c0f1f570`. These are the source of truth.
+  `canon@c0f1f570`. These are the source of truth.
 - A placeholder CLI dispatcher (`cli/hexa-pet.hexa`) that prints each spec
   doc headline + a 5-verb count selftest.
 - `install.hexa` hx hook (mirrors the `hexa-bio` install pattern).
@@ -148,7 +148,7 @@ $EDITOR dog_toy/dog-toy.md
 ## Provenance
 
 Extracted 2026-05-06 from
-[`n6-architecture`](https://github.com/need-singularity/n6-architecture)
+[`canon`](https://github.com/need-singularity/canon)
 SHA `c0f1f570` (`domains/pets/` subtree). Source files unchanged; directory
 slugs converted to `snake_case` per hexa-lang raw#11 (`cat-food/` →
 `cat_food/` etc.). Sister extraction of:

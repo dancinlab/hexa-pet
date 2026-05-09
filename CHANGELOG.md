@@ -51,7 +51,7 @@ All notable changes to **hexa-pet** are documented here. Format follows
 
 ### Added
 - Initial standalone extraction from
-  [`n6-architecture`](https://github.com/dancinlab/n6-architecture)
+  [`canon`](https://github.com/dancinlab/canon)
   SHA `c0f1f570` (`domains/pets/` subtree). Sister of `hexa-bio` standalone
   pattern (2026-05-04).
 - 5-verb consumer-pet-care substrate (HEXA family):
@@ -113,7 +113,7 @@ All notable changes to **hexa-pet** are documented here. Format follows
   finished product. No animal trials have been conducted.
 
 ### Provenance
-- Extracted from `n6-architecture/domains/pets/` (SHA `c0f1f570`,
+- Extracted from `canon/domains/pets/` (SHA `c0f1f570`,
   2026-05-06). Source files unchanged; directory slugs converted from
   `kebab-case` to `snake_case` per hexa-lang raw#11.
 - Sister extractions: `hexa-bio` v1.0.0 (4-verb molecular toolkit,

@@ -2,7 +2,7 @@
 #
 # Spec: shared/hexa-lang/hexa-toml-spec.json (version 1.0.0)
 # Distribution target: hx install hexa-pet
-# Provenance: extracted from n6-architecture/domains/pets/ on 2026-05-06
+# Provenance: extracted from canon/domains/pets/ on 2026-05-06
 #             (n6-arch SHA c0f1f570 — sister of hexa-bio standalone pattern)
 
 [package]
@@ -37,7 +37,7 @@ install = "install.hexa"
 
 # ── Verb manifest (5-verb pet substrate) ──────────────────
 # All 5 verbs ship as spec docs (cat-food.md / cat-litter.md / cat-toy.md /
-# dog-food.md / dog-toy.md) extracted from n6-architecture@c0f1f570. Working
+# dog-food.md / dog-toy.md) extracted from canon@c0f1f570. Working
 # .hexa CLI dispatchers are placeholders printing the spec headline; full
 # numerical implementations TBD per per-verb falsifier deadlines.
 [verbs]
@@ -65,7 +65,7 @@ verbs_total = 5
 verbs_wired = 0
 verbs_spec_only = 5
 verdict = "SPEC_FIRST"
-extracted_from = "n6-architecture/domains/pets/ @ c0f1f570 (2026-05-06)"
+extracted_from = "canon/domains/pets/ @ c0f1f570 (2026-05-06)"
 
 # ── Scope honesty (raw#10 C3) ─────────────────────────────
 [scope]

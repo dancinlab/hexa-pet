@@ -4,7 +4,7 @@
 **Closure verdict**: **SPEC_FIRST** (5/5 verbs spec-only at v1.0.0; working
 `.hexa` CLI TBD per per-verb F-*-MVP-* deadlines)
 **Provenance**: extracted 2026-05-06 from
-[`n6-architecture`](https://github.com/need-singularity/n6-architecture)
+[`canon`](https://github.com/need-singularity/canon)
 SHA `c0f1f570` (`domains/pets/` subtree). Sister of `hexa-bio` v1.0.0
 standalone pattern (2026-05-04).
 
@@ -15,7 +15,7 @@ intersection of consumer-product engineering, animal behavior, and
 small-scale material science.
 
 The pack is intentionally **self-contained**: every verb is a single
-peer-citable spec doc, copy-pasted from upstream `n6-architecture`. No
+peer-citable spec doc, copy-pasted from upstream `canon`. No
 other `hexa-*` repo is needed to use this one — clone it, read it, hack it.
 
 ## Highlights
@@ -108,7 +108,7 @@ hexa-pet dog_toy             # dog-toy.md spec headline
 ## Provenance
 
 - All 5 verb spec docs imported unchanged from
-  `n6-architecture/domains/pets/` (SHA `c0f1f570`, 2026-05-06). Directory
+  `canon/domains/pets/` (SHA `c0f1f570`, 2026-05-06). Directory
   slugs converted from `kebab-case` to `snake_case` per hexa-lang raw#11.
 - Sister extractions:
   - `hexa-bio` v1.0.0 — 4-verb molecular toolkit (Apache-2.0, 2026-05-04).

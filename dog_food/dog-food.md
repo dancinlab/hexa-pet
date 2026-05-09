@@ -1,6 +1,6 @@
-<!-- @canonical: n6-architecture@0570a835:domains/pets/dog-food/dog-food.md -->
+<!-- @canonical: canon@d1640e62:domains/pets/dog-food/dog-food.md -->
 <!-- @extracted: 2026-05-06 -->
-<!-- @md5_at_extraction: c13e6c46e5646c010b91aa3387eca210 -->
+<!-- @md5_at_extraction: 910987989fc1eaa82e8a61dfa7205ab8 -->
 <!-- gold-standard: shared/harness/sample.md -->
 <!-- @doc(type=paper) -->
 ---
@@ -988,7 +988,7 @@ Test plan:
 | Chr. Hansen (DK) | B. animalis lactis Bb12 | canine probiotic strain |
 | Diamond V (USA) | yeast culture | digestibility adjunct |
 | Mondi Group (AT) / Amcor (AU) | kraft+PE pouch | retail SKU packaging |
-| n6-architecture private framework | own_doc_lint / own31 lint | docs gate |
+| canon private framework | own_doc_lint / own31 lint | docs gate |
 
 ## §19 ACCEPTANCE / MISS criteria (own#12 pre-declared)
 
