@@ -4,6 +4,7 @@
 > lattice**: cat-food / cat-litter / cat-toy / dog-food / dog-toy.
 > Friendly self-contained pack — no other hexa-* repo required.
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20102614.svg)](https://doi.org/10.5281/zenodo.20102614)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-1.0.0-informational.svg)](CHANGELOG.md)
 [![Verbs: 5 spec](https://img.shields.io/badge/verbs-5_spec_(working_CLI_TBD)-blue.svg)](#verbs)
