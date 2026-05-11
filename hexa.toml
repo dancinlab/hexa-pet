@@ -12,8 +12,8 @@ entry = "cli/hexa-pet.hexa"
 description = "반려동물 toolkit — cat·dog food/litter/toy 5-verb. n=6 invariant lattice. Consumer-friendly self-contained substrate (spec-first; working .hexa CLI TBD)."
 license = "MIT"
 authors = ["박민우 <nerve011235@gmail.com>"]
-repository = "https://github.com/need-singularity/hexa-pet"
-homepage = "https://github.com/need-singularity/hexa-pet"
+repository = "https://github.com/dancinlab/hexa-pet"
+homepage = "https://github.com/dancinlab/hexa-pet"
 readme = "README.md"
 keywords = ["pet", "cat", "dog", "litter", "food", "toy", "hexa-family", "n6-invariant", "consumer-product"]
 categories = ["consumer-products", "companion-animals", "material-science"]

@@ -237,7 +237,7 @@ fn cmd_version() {
     println("hexa-pet " + VERSION)
     println("standalone 반려동물 toolkit (HEXA family — extracted from canon@c0f1f570 on 2026-05-06)")
     println("license: MIT")
-    println("repo:    https://github.com/need-singularity/hexa-pet")
+    println("repo:    https://github.com/dancinlab/hexa-pet")
 }
 
 // ─── help ───

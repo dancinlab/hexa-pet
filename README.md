@@ -22,7 +22,7 @@ and small-scale material science.
 This is the most self-contained pack in the family on purpose: every verb is
 a single peer-citable spec doc with physical-limit anchors and a falsifier
 preregister, copy-pasted out of the upstream
-[`canon/domains/pets/`](https://github.com/need-singularity/canon)
+[`canon/domains/pets/`](https://github.com/dancinlab/canon)
 tree (SHA `c0f1f570`, 2026-05-06). No other `hexa-*` repo is needed to use
 this one — clone it, read it, hack it.
 
@@ -111,7 +111,7 @@ hexa-pet --version           # → 1.0.0
 ### Via git clone (works today)
 
 ```bash
-git clone https://github.com/need-singularity/hexa-pet.git ~/.hexa-pet
+git clone https://github.com/dancinlab/hexa-pet.git ~/.hexa-pet
 export HEXA_PET_ROOT=~/.hexa-pet
 export PATH="$HEXA_PET_ROOT/cli:$PATH"
 hexa-pet selftest            # 5-verb count check
@@ -149,12 +149,12 @@ $EDITOR dog_toy/dog-toy.md
 ## Provenance
 
 Extracted 2026-05-06 from
-[`canon`](https://github.com/need-singularity/canon)
+[`canon`](https://github.com/dancinlab/canon)
 SHA `c0f1f570` (`domains/pets/` subtree). Source files unchanged; directory
 slugs converted to `snake_case` per hexa-lang raw#11 (`cat-food/` →
 `cat_food/` etc.). Sister extraction of:
 
-- [`hexa-bio`](https://github.com/need-singularity/hexa-bio) — molecular
+- [`hexa-bio`](https://github.com/dancinlab/hexa-bio) — molecular
   toolkit (4-verb HEXA family, 1/4 wired)
 
 ---

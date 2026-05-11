@@ -4,7 +4,7 @@
 **Closure verdict**: **SPEC_FIRST** (5/5 verbs spec-only at v1.0.0; working
 `.hexa` CLI TBD per per-verb F-*-MVP-* deadlines)
 **Provenance**: extracted 2026-05-06 from
-[`canon`](https://github.com/need-singularity/canon)
+[`canon`](https://github.com/dancinlab/canon)
 SHA `c0f1f570` (`domains/pets/` subtree). Sister of `hexa-bio` v1.0.0
 standalone pattern (2026-05-04).
 
@@ -53,7 +53,7 @@ other `hexa-*` repo is needed to use this one — clone it, read it, hack it.
 - **MIT license** — minimal copyleft friction for downstream consumer
   products and maker community remix.
 - **GitHub-only distribution** — canonical at
-  <https://github.com/need-singularity/hexa-pet>.
+  <https://github.com/dancinlab/hexa-pet>.
 
 ## Installation
 
@@ -63,7 +63,7 @@ hx install hexa-pet@1.0.0
 hexa-pet --version           # → 1.0.0
 
 # Or git clone (works today):
-git clone https://github.com/need-singularity/hexa-pet.git ~/.hexa-pet
+git clone https://github.com/dancinlab/hexa-pet.git ~/.hexa-pet
 export HEXA_PET_ROOT=~/.hexa-pet
 export PATH="$HEXA_PET_ROOT/cli:$PATH"
 hexa-pet selftest
