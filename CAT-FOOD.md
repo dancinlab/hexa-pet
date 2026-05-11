@@ -1,3 +1,6 @@
+<!-- @canonical: n6-architecture@0570a835:domains/pets/cat-food/cat-food.md -->
+<!-- @extracted: 2026-05-06 -->
+<!-- @md5_at_extraction: 5d4d773dc169c9fc20315b8ce2d20be6 -->
 <!-- gold-standard: shared/harness/sample.md -->
 <!-- @doc(type=paper) -->
 ---
@@ -1118,7 +1121,7 @@ Test plan:
 | Cerbios-Pharma (CH) | E. faecium SF68 | probiotic strain |
 | Diamond V (USA) | yeast culture | digestibility adjunct |
 | Mondi Group (AT) / Amcor (AU) | kraft+PE pouch | retail SKU packaging |
-| canon private framework | own_doc_lint / own31 lint | docs gate |
+| n6-architecture private framework | own_doc_lint / own31 lint | docs gate |
 
 ## §19 ACCEPTANCE / MISS criteria (own#12 pre-declared)
 
