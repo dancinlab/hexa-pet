@@ -100,48 +100,28 @@ What does NOT ship at v1.0.0 (honest C3 caveats):
 
 ## Install
 
-### Via `hx` (recommended once registered)
-
 ```bash
+# 1. Install hexa-lang (ships `hexa` + `hx` package manager)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/dancinlab/hexa-lang/main/install.sh)"
+
+# 2. Install hexa-pet
 hx install hexa-pet          # global, pulls latest from registry
-hx install hexa-pet@1.0.0    # pin specific version
-hexa-pet --version           # → 1.0.0
-```
-
-### Via git clone (works today)
-
-```bash
-git clone https://github.com/dancinlab/hexa-pet.git ~/.hexa-pet
-export HEXA_PET_ROOT=~/.hexa-pet
-export PATH="$HEXA_PET_ROOT/cli:$PATH"
-hexa-pet selftest            # 5-verb count check
-hexa-pet status              # verb table + caveats
-hexa-pet cat_food            # cat-food.md spec headline
 ```
 
 ---
 
-## Quickstart
+## Run
 
 ```bash
-hexa-pet selftest            # 5/5 verbs present?
-hexa-pet status              # full verb table + n=6 projections
-hexa-pet cat_food            # → first 30 lines of cat_food/cat-food.md
-hexa-pet cat_litter          # → first 30 lines of cat_litter/cat-litter.md
-hexa-pet cat_toy             # → first 30 lines of cat_toy/cat-toy.md
-hexa-pet dog_food            # → first 30 lines of dog_food/dog-food.md
-hexa-pet dog_toy             # → first 30 lines of dog_toy/dog-toy.md
-```
-
-For deep reading, just open the spec docs directly — they are the
-source of truth:
-
-```bash
-$EDITOR cat_food/cat-food.md
-$EDITOR cat_litter/cat-litter.md
-$EDITOR cat_toy/cat-toy.md
-$EDITOR dog_food/dog-food.md
-$EDITOR dog_toy/dog-toy.md
+hexa-pet cat_food            # feline obligate-carnivore food spec       [SPEC]
+hexa-pet cat_litter          # Wyoming bentonite hygiene material spec   [SPEC]
+hexa-pet cat_toy             # nepetalactone prey-mimic toy spec         [SPEC]
+hexa-pet dog_food            # facultative-carnivore canine food spec    [SPEC]
+hexa-pet dog_toy             # Kevlar/rubber canine chew toy spec        [SPEC]
+hexa-pet status              # 5-verb status table + verdict + caveats
+hexa-pet selftest            # 5-verb spec doc presence count check
+hexa-pet --version           # show version
+hexa-pet --help              # full usage
 ```
 
 ---
