@@ -101,11 +101,11 @@ What does NOT ship at v1.0.0 (honest C3 caveats):
 ## Install
 
 ```bash
-# 1. Install hexa-lang (ships `hexa` + `hx` package manager)
+# 1. Install hexa-lang (gives you `hexa` + `hx` package manager)
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/dancinlab/hexa-lang/main/install.sh)"
 
 # 2. Install hexa-pet
-hx install hexa-pet          # global, pulls latest from registry
+hx install hexa-pet
 ```
 
 ---
