@@ -48,22 +48,6 @@ and so on.
 
 ---
 
-## Verbs
-
-| #   | Verb         | Domain                                          | Physical-limit anchor                                       | n=6 projection                              | Falsifier MVP gate            |
-| --- | ------------ | ----------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------- | ----------------------------- |
-| 1   | `cat_food`   | feline obligate-carnivore food                  | AAFCO 26% protein / 0.1% taurine + Atwater 4-9-4 + Maillard | σ=12 raw-strategy registry                  | F-CF-MVP-1..5 2026-07~09-30   |
-| 2   | `cat_litter` | bentonite + zeolite + carbon hygiene material   | Wyoming Na-bentonite swell 12× (Grim 1968)                  | σ=12 swell ratio · τ=4 odor tier            | F-CL-MVP-1..4 2026-07~08-30   |
-| 3   | `cat_toy`    | nepetalactone-driven prey-mimic toys            | Antoine 1888 nepetalactone vapor pressure + Kevlar 29 fiber | per-verb projection                         | F-CT-MVP-* (TBD)              |
-| 4   | `dog_food`   | facultative-carnivore canine food               | AAFCO 18% protein / 10 EAA + low-GI grain agronomy          | per-verb projection                         | F-DF-MVP-* (TBD)              |
-| 5   | `dog_toy`    | Kevlar-core rope + rubber chew toys             | Lindner 1995 canine bite 1-4 MPa + Hertz 1881 contact       | per-verb projection                         | F-DT-MVP-* (TBD)              |
-
-Each verb's `<verb>/<verb>.md` is a peer-citable spec — open it, read it,
-cite it. The CLI router prints the first 30 lines of each doc as a quick
-preview.
-
----
-
 ## Status
 
 > **5-verb 반려동물 substrate. Spec-first (working `.hexa` CLI TBD).
