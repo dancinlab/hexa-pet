@@ -1,0 +1,75 @@
+#!hexa strict
+// hexa-pet/verify/spec_presence.hexa — 5-verb spec doc presence verifier.
+//
+// Closure anchor #1 for hexa-pet (spec-first consumer-pet substrate):
+// each of the 5 verbs (cat_food / cat_litter / cat_toy / dog_food / dog_toy)
+// declared in hexa.toml [verbs] must resolve to a real spec markdown at
+// <subdir>/<filename>. This is the *honest* closure check for a
+// spec-first repo — file presence, not behavioural promise.
+//
+// Per LATTICE_POLICY §1.3: spec-presence is real engineering verification
+// (files exist on disk); not a lattice tautology.
+
+let HOME = env("HOME")
+let HEXA_PET_ROOT_ENV = env("HEXA_PET_ROOT")
+
+fn shq(s: str) -> str {
+    return "'" + s.replace("'", "'\\''") + "'"
+}
+
+fn _resolve_root() -> str {
+    if HEXA_PET_ROOT_ENV.len() > 0 { return HEXA_PET_ROOT_ENV }
+    let oldpwd = env("OLDPWD")
+    if oldpwd.len() > 0 {
+        let t = exec("[ -f " + shq(oldpwd) + "/hexa.toml ] && echo y || echo n").trim()
+        if t == "y" { return oldpwd }
+    }
+    let pwd = env("PWD")
+    if pwd.len() > 0 {
+        let t = exec("[ -f " + shq(pwd) + "/hexa.toml ] && echo y || echo n").trim()
+        if t == "y" { return pwd }
+    }
+    return HOME + "/core/hexa-pet"
+}
+
+fn _file_exists(p: str) -> bool {
+    let r = exec("[ -f " + shq(p) + " ] && echo yes || echo no").trim()
+    return r == "yes"
+}
+
+// 5-verb spec registry — must match cli/hexa-pet.hexa SPEC_* and hexa.toml [verbs].
+let VERBS = [
+    ["cat_food",   "cat_food/cat-food.md"],
+    ["cat_litter", "cat_litter/cat-litter.md"],
+    ["cat_toy",    "cat_toy/cat-toy.md"],
+    ["dog_food",   "dog_food/dog-food.md"],
+    ["dog_toy",    "dog_toy/dog-toy.md"],
+]
+
+fn main() {
+    let root = _resolve_root()
+    println("hexa-pet/verify/spec_presence — 5-verb spec doc presence")
+    println("  root: " + root)
+    println("")
+    let mut ok = 0
+    let mut bad = 0
+    for row in VERBS {
+        let verb = row[0]
+        let rel = row[1]
+        let abs_p = root + "/" + rel
+        if _file_exists(abs_p) {
+            println("  [PASS] " + verb + " -> " + rel)
+            ok = ok + 1
+        } else {
+            println("  [FAIL] " + verb + " -> " + rel + " MISSING (abs: " + abs_p + ")")
+            bad = bad + 1
+        }
+    }
+    println("")
+    println("  spec docs present: " + str(ok) + " / 5")
+    if bad > 0 {
+        println("__HEXA_PET_SPEC_PRESENCE__ FAIL")
+        exit(1)
+    }
+    println("__HEXA_PET_SPEC_PRESENCE__ PASS")
+}

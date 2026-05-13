@@ -8,6 +8,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-1.0.0-informational.svg)](CHANGELOG.md)
 [![Verbs: 5 spec](https://img.shields.io/badge/verbs-5_spec_(working_CLI_TBD)-blue.svg)](#verbs)
+[![Verify: 4/4 PASS](https://img.shields.io/badge/verify-4%2F4_PASS-brightgreen.svg)](verify/run_all.hexa)
+[![Closure: 100%](https://img.shields.io/badge/closure-100%25_(5%2F5_spec--first)-brightgreen.svg)](#verify)
 [![n=6 lattice](https://img.shields.io/badge/n%3D6-σ%3D12_τ%3D4_φ%3D2_J₂%3D24-purple.svg)](#why)
 
 ---
@@ -107,6 +109,47 @@ hexa-pet selftest            # 5-verb spec doc presence count check
 hexa-pet --version           # show version
 hexa-pet --help              # full usage
 ```
+
+---
+
+## Verify
+
+Sister-substrate `verify/run_all.hexa` aggregator pattern, scaled to
+the 5-verb consumer-pet substrate. From the repo root:
+
+```bash
+hexa run verify/run_all.hexa     # exit 0 = all 4 scripts PASS (100% closure)
+```
+
+| script                            | what it checks                                                                          |
+| --------------------------------- | --------------------------------------------------------------------------------------- |
+| `verify/spec_presence.hexa`       | all 5 verb spec docs present at declared paths                                          |
+| `verify/lattice_arithmetic.hexa`  | n=6 self-consistency (σ·φ = n·τ = 24) — *aux only* per `LATTICE_POLICY.md` §1.3         |
+| `verify/real_limits_anchor.hexa`  | `LIMIT_BREAKTHROUGH.md` anchors (AVMA/AAHA · AAFCO · FDA-CVM · NRC 2006 · ANSI Z136.1)  |
+| `verify/closure_consistency.hexa` | scoreboard cross-check (CLI · `hexa.toml` · README · `AGENTS.md`)                       |
+
+Per `LATTICE_POLICY.md` §1.3, lattice-arithmetic identities are
+permitted only as auxiliary self-consistency checks; the substrate's
+real verification anchors live in `LIMIT_BREAKTHROUGH.md`:
+
+- **Veterinary medicine** — AVMA / AAHA practice guidelines.
+- **Pet nutrition** — AAFCO 2024 nutrient profiles + NRC 2006
+  *Nutrient Requirements of Dogs and Cats*.
+- **Pet pharmaceuticals** — FDA-CVM (Center for Veterinary Medicine).
+- **Material / behaviour anchors** — Wyoming Na-bentonite swell
+  (Grim 1978), catnip / nepetalactone (Todd 1962), canine bite
+  force (Ellis 2008), ANSI Z136.1 laser MPE (Class IIIa < 5 mW).
+
+Honest scope (raw#10 C3):
+
+- **Pet-medical claims are STRICTLY UNPROVEN** without veterinary IRB.
+  This repo is *consumer-product engineering*, not veterinary medicine.
+  **Consult a licensed veterinarian for any clinical decision** about
+  your animal's diet, health, or treatment.
+- Pet-food / pet-pharma / pet-retail brands (Hill's, Royal Canin,
+  Purina, Zoetis, Boehringer, Elanco, Petco, Chewy) use **THEIR
+  OWN specs** — no lattice-fit is asserted against any external
+  brand (per `LATTICE_POLICY.md` §3.3 + raw#10 C3).
 
 ---
 
