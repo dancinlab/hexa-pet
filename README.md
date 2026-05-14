@@ -1,16 +1,29 @@
-# 🐱 hexa-pet — 반려동물 toolkit
+<p align="center">
+  <img src="docs/logo.svg" width="140" alt="hexa-pet">
+</p>
+
+<h1 align="center">🐾 hexa-pet</h1>
+
+<p align="center"><strong>HEXA-Companion Family</strong> — 5-verb consumer pet-care substrate · spec-first · n=6 lattice · self-contained</p>
+
+<p align="center">
+  <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-blue"></a>
+  <a href=".github/workflows/lint.yml"><img alt="CI" src="https://github.com/dancinlab/hexa-pet/actions/workflows/lint.yml/badge.svg"></a>
+  <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-success">
+  <img alt="Verbs" src="https://img.shields.io/badge/verbs-5-informational">
+  <img alt="Verify" src="https://img.shields.io/badge/verify-4%2F4_PASS-informational">
+  <img alt="Closure" src="https://img.shields.io/badge/closure-100%25-informational">
+  <a href="https://doi.org/10.5281/zenodo.20102614"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.20102614.svg"></a>
+  <img alt="Family" src="https://img.shields.io/badge/family-cat--food%20·%20cat--litter%20·%20cat--toy%20·%20dog--food%20·%20dog--toy-blueviolet">
+</p>
+
+<p align="center">Pets · companions · cat · dog · food · litter · toy · AAFCO · NRC · spec-first · n=6 lattice</p>
+
+---
 
 > 5-verb consumer-pet-care substrate organized around the **n=6 invariant
 > lattice**: cat-food / cat-litter / cat-toy / dog-food / dog-toy.
 > Friendly self-contained pack — no other hexa-* repo required.
-
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20102614.svg)](https://doi.org/10.5281/zenodo.20102614)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.0.0-informational.svg)](CHANGELOG.md)
-[![Verbs: 5 spec](https://img.shields.io/badge/verbs-5_spec_(working_CLI_TBD)-blue.svg)](#verbs)
-[![Verify: 4/4 PASS](https://img.shields.io/badge/verify-4%2F4_PASS-brightgreen.svg)](verify/run_all.hexa)
-[![Closure: 100%](https://img.shields.io/badge/closure-100%25_(5%2F5_spec--first)-brightgreen.svg)](#verify)
-[![n=6 lattice](https://img.shields.io/badge/n%3D6-σ%3D12_τ%3D4_φ%3D2_J₂%3D24-purple.svg)](#why)
 
 ---
 
@@ -140,7 +153,6 @@ real verification anchors live in `LIMIT_BREAKTHROUGH.md`:
   (Grim 1978), catnip / nepetalactone (Todd 1962), canine bite
   force (Ellis 2008), ANSI Z136.1 laser MPE (Class IIIa < 5 mW).
 
-Honest scope (raw#10 C3):
 
 - **Pet-medical claims are STRICTLY UNPROVEN** without veterinary IRB.
   This repo is *consumer-product engineering*, not veterinary medicine.
@@ -149,16 +161,38 @@ Honest scope (raw#10 C3):
 - Pet-food / pet-pharma / pet-retail brands (Hill's, Royal Canin,
   Purina, Zoetis, Boehringer, Elanco, Petco, Chewy) use **THEIR
   OWN specs** — no lattice-fit is asserted against any external
-  brand (per `LATTICE_POLICY.md` §3.3 + raw#10 C3).
 
 ---
+
+## Repo layout
+
+```
+hexa-pet/
+├── README.md
+├── LICENSE                       MIT
+├── CHANGELOG.md
+├── hexa.toml                     project manifest
+├── install.hexa                  hx install hook
+├── cli/
+│   └── hexa-pet.hexa             placeholder CLI dispatcher (spec-first)
+├── CAT-FOOD.md                   feline obligate-carnivore food spec
+├── CAT-LITTER.md                 Wyoming bentonite hygiene material spec
+├── CAT-TOY.md                    nepetalactone prey-mimic toy spec
+├── DOG-FOOD.md                   facultative-carnivore canine food spec
+├── DOG-TOY.md                    Kevlar/rubber canine chew toy spec
+├── cat_food/  cat_litter/  cat_toy/  dog_food/  dog_toy/   per-verb working dirs
+├── firmware/                     embedded-firmware sibling tree
+├── verify/                       4 closure scripts (spec_presence · lattice · real_limits · closure)
+├── LATTICE_POLICY.md             n=6 aux-only check policy
+├── LIMIT_BREAKTHROUGH.md         AVMA · AAHA · AAFCO · FDA-CVM · NRC anchors
+└── AGENTS.tape                   agent identity + repo layout (governance #4)
+```
 
 ## Provenance
 
 Extracted 2026-05-06 from
 [`canon`](https://github.com/dancinlab/canon)
 SHA `c0f1f570` (`domains/pets/` subtree). Source files unchanged; directory
-slugs converted to `snake_case` per hexa-lang raw#11 (`cat-food/` →
 `cat_food/` etc.). Sister extraction of:
 
 - [`hexa-bio`](https://github.com/dancinlab/hexa-bio) — molecular
