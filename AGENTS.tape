@@ -46,7 +46,7 @@
 @I id001 := "hexa-pet" :: identity-claim [d=2026-05-14 active]
   kind = "HEXA-Companion family — pets · companions"
   brief = "HEXA-Companion family · pets · companions"
-  parent = "dancinlab/echoes"
+  parent = "dancinlab"
 
 @L l1 := "repo-layout" :: structure [active]
   .roadmap.hexa_pet -> "file"
